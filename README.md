@@ -1,6 +1,5 @@
 # DDClock: Desktop Digital Clock for Windows
 Simple Win32 API Application
-
 Support: Windows XP or later (may be Win2000 and Win98 too)
 
 ## Download
@@ -9,9 +8,10 @@ Support: Windows XP or later (may be Win2000 and Win98 too)
 [ddclock.1.0.zip](https://github.com/rty65tt/ddclock/raw/master/release/ddclock.1.0.zip)
 
 ## How use
+
 Double click switch Window Style
 
-![](https://raw.githubusercontent.com/rty65tt/ddclock/master/dblclick.png)
+![](https://raw.githubusercontent.com/rty65tt/ddclock/master/switchwinstyle.png)
 
 
 Key "T" switch "Always On Top" window mode
