@@ -9,16 +9,16 @@ Support: Windows XP or later (may be Win2000 and Win98 too)
 [ddclock.1.0.zip](https://github.com/rty65tt/ddclock/raw/master/release/ddclock.1.0.zip)
 
 ## How use
-Double click switch
+Double click switch Window Style
 
-![screensot1](https://raw.githubusercontent.com/rty65tt/ddclock/master/dblclick.png  "Screenshot1")
+![](https://raw.githubusercontent.com/rty65tt/ddclock/master/dblclick.png)
 
 
 Key "T" switch "Always On Top" window mode
 
-![screensot3](https://raw.githubusercontent.com/rty65tt/ddclock/master/alwaysontop.png  "Screenshot3")
+![](https://raw.githubusercontent.com/rty65tt/ddclock/master/alwaysontop.png)
 
 
 Right click change color
 
-![screensot2](https://raw.githubusercontent.com/rty65tt/ddclock/master/switchtcolor.png  "Screenshot2")
+![](https://raw.githubusercontent.com/rty65tt/ddclock/master/switchtcolor.png)
