@@ -1,0 +1,14 @@
+.gitconfig
+build
+.vscode
+.git
+upx393w
+*.o
+*.res
+*.scr
+*.exe
+*.com
+*.log
+debug
+logs
+TODOList.org
