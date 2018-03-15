@@ -292,6 +292,10 @@ LRESULT CALLBACK WndProc(
       LONG popup = (w_popup) ? WS_POPUP : WS_OVERLAPPEDWINDOW;
       SetWindowLong(hWnd, GWL_STYLE, popup);
 
+      if (cw_rc.right == 0) {
+        cw_rc = wrc;
+      }
+
       SetWindowPos(hWnd, topmost,
         cw_rc.left,
         cw_rc.top,
