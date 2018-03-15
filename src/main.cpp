@@ -50,7 +50,6 @@ static CLOCKCOLOR color3 = {
   Color(255, 165, 165, 165)
 };
 
-
 static CLOCKCOLOR ccolor = def_color;
 
 static CLOCKCOLOR *arrthemes[] = {
