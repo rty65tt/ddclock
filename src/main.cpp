@@ -19,21 +19,53 @@ using namespace Gdiplus;
 #define WIN_WIDTH_MIN 175
 #define WIN_HIGHT_MIN 75
 
-static Color def_bgcolor(255, 75, 75, 75);
-static Color def_fgcolor(255, 0, 0, 0);
-static Color def_ldcolor(255, 65, 65, 65);
+struct CLOCKCOLOR
+{
+  Color bg;
+  Color fg;
+  Color ld;
+};
 
-static Color bgcolor = def_bgcolor;
-static Color fgcolor = def_fgcolor;
-static Color ldcolor = def_ldcolor;
+static CLOCKCOLOR def_color = {
+  Color(255, 0, 0, 0),
+  Color(255, 120, 120, 120),
+  Color(255, 15, 15, 15)
+};
 
-static Color *slctcolor = &bgcolor;
-static Color *clrarr[]  = {&bgcolor, &fgcolor, &ldcolor};
+static CLOCKCOLOR color1 = {
+  Color(255, 75, 75, 75),
+  Color(255, 0, 0, 0),
+  Color(255, 65, 65, 65)
+};
+
+static CLOCKCOLOR color2 = {
+  Color(255, 130, 130, 130),
+  Color(255, 0, 0, 0),
+  Color(255, 115, 115, 115)
+};
+
+static CLOCKCOLOR color3 = {
+  Color(255, 180, 180, 180),
+  Color(255, 0, 0, 0),
+  Color(255, 165, 165, 165)
+};
+
+
+static CLOCKCOLOR ccolor = def_color;
+
+static CLOCKCOLOR *arrthemes[] = {
+  &def_color,
+  &color1,
+  &color2,
+  &color3
+};
+
+static Color *slctcolor = &ccolor.bg;
+static Color *clrarr[]  = {&ccolor.bg, &ccolor.fg, &ccolor.ld};
 
 static int settclr  = 0;
 static int w_popup = 0;
 static HWND topmost = HWND_NOTOPMOST;
-static int autorun = 0;
 
 static RECT cw_rc;
 
@@ -55,9 +87,9 @@ void LoadSaveSettings(BOOL do_save)
     {
         if (do_save)
         {
-            RegSetValueEx(key, "bg.color", 0, type, (PBYTE)&bgcolor, size);
-            RegSetValueEx(key, "fg.color", 0, type, (PBYTE)&fgcolor, size);
-            RegSetValueEx(key, "ld.color", 0, type, (PBYTE)&ldcolor, size);
+            RegSetValueEx(key, "bg.color", 0, type, (PBYTE)&ccolor.bg, size);
+            RegSetValueEx(key, "fg.color", 0, type, (PBYTE)&ccolor.fg, size);
+            RegSetValueEx(key, "ld.color", 0, type, (PBYTE)&ccolor.ld, size);
 
             RegSetValueEx(key, "w_left", 0, type, (PBYTE)&cw_rc.left, size);
             RegSetValueEx(key, "w_right", 0, type, (PBYTE)&cw_rc.right, size);
@@ -65,13 +97,12 @@ void LoadSaveSettings(BOOL do_save)
             RegSetValueEx(key, "w_bottom", 0, type, (PBYTE)&cw_rc.bottom, size);
             RegSetValueEx(key, "topmost", 0, type, (PBYTE)&topmost, size);
             RegSetValueEx(key, "popup", 0, type, (PBYTE)&w_popup, size);
-            RegSetValueEx(key, "autorun", 0, type, (PBYTE)&autorun, size);
         }
         else
         {
-            RegQueryValueEx(key, "bg.color", 0, &type, (PBYTE)&bgcolor, &size);
-            RegQueryValueEx(key, "fg.color", 0, &type, (PBYTE)&fgcolor, &size);
-            RegQueryValueEx(key, "ld.color", 0, &type, (PBYTE)&ldcolor, &size);
+            RegQueryValueEx(key, "bg.color", 0, &type, (PBYTE)&ccolor.bg, &size);
+            RegQueryValueEx(key, "fg.color", 0, &type, (PBYTE)&ccolor.fg, &size);
+            RegQueryValueEx(key, "ld.color", 0, &type, (PBYTE)&ccolor.ld, &size);
 
             RegQueryValueEx(key, "w_left", 0, &type, (PBYTE)&cw_rc.left, &size);
             RegQueryValueEx(key, "w_right", 0, &type, (PBYTE)&cw_rc.right, &size);
@@ -79,7 +110,6 @@ void LoadSaveSettings(BOOL do_save)
             RegQueryValueEx(key, "w_bottom", 0, &type, (PBYTE)&cw_rc.bottom, &size);
             RegQueryValueEx(key, "topmost", 0, &type, (PBYTE)&topmost, &size);
             RegQueryValueEx(key, "popup", 0, &type, (PBYTE)&w_popup, &size);
-            RegQueryValueEx(key, "autorun", 0, &type, (PBYTE)&autorun, &size);
         }
         RegCloseKey(key);
     }
@@ -116,20 +146,19 @@ VOID OnPaint(HDC *hdc, RECT *rc)
   HGDIOBJ hTmp = SelectObject(hDCMem, hBmp);
 
   Graphics graphics(hDCMem);
-  graphics.Clear(bgcolor);
+  graphics.Clear(ccolor.bg);
   graphics.SetSmoothingMode(SmoothingModeHighQuality);
   graphics.SetTextRenderingHint(TextRenderingHintAntiAlias);
 
   Font myFont(&fontFamily[0], fsz, FontStyleRegular, UnitPixel);
-  SolidBrush fgBrush(fgcolor);
-  SolidBrush ledBrush(ldcolor);
+  SolidBrush fgBrush(ccolor.fg);
+  SolidBrush ledBrush(ccolor.ld);
   StringFormat format;
   format.SetAlignment(StringAlignmentCenter);
   format.SetLineAlignment(StringAlignmentCenter);
   RectF layoutRect(7.0f-sx, 0.0f, rc->right+sx, rc->bottom+2*sy);
   graphics.DrawString(ledstr,8,&myFont,layoutRect,&format,&ledBrush);
   graphics.DrawString(buffer,8,&myFont,layoutRect,&format,&fgBrush);
-
 
   RectF ellipseRect(2.0f, 2.0f, 5.0f, 5.0f);
   SolidBrush *cyrBrush = (topmost == HWND_TOPMOST) ? &fgBrush : &ledBrush;
@@ -336,8 +365,8 @@ LRESULT CALLBACK WndProc(
     }
     return 0;
   }
-  case WM_KEYDOWN:
-  {
+  case WM_KEYDOWN: 
+    {
     if ((DWORD)wParam == 0x54)
     {
       int x,y,w,h;
@@ -352,10 +381,6 @@ LRESULT CALLBACK WndProc(
       SetWindowPos(hWnd, topmost, x, y, w, h,SWP_SHOWWINDOW);
     }
     RedrawWindow(hWnd, &rc, NULL, RDW_INVALIDATE);
-    if ((DWORD)wParam == 0x53)
-    {
-      LoadSaveSettings(TRUE);
-    }
     if ((DWORD)wParam == 0x51)
     {
       SendMessage(hWnd, WM_DESTROY, 0, 0);
@@ -388,24 +413,14 @@ LRESULT CALLBACK WndProc(
   }
   case WM_RBUTTONDOWN:
     {
-      if (color_n == 0) {
-        bgcolor = Color(255, 0,0,0);
-        fgcolor = Color(255, 120,120,120);
-        ldcolor = Color(255, 15,15,15);
-        color_n = 1;
-      }
-      else {
-        bgcolor = def_bgcolor;
-        fgcolor = def_fgcolor;
-        ldcolor = def_ldcolor;
-        color_n = 0;
-      }
+      color_n = color_n > 2 ? 0 :++color_n;
+      ccolor = *arrthemes[color_n];
       RedrawWindow(hWnd, &rc, NULL, RDW_INVALIDATE);
     }
     break;
   case WM_MBUTTONDOWN:
     {
-      settclr = (settclr > 1) ? 0 : settclr+1; 
+      settclr = (settclr > 1) ? 0 : ++settclr; 
       slctcolor = clrarr[settclr];
       RedrawWindow(hWnd, &rc, NULL, RDW_INVALIDATE);
     }
@@ -413,21 +428,14 @@ LRESULT CALLBACK WndProc(
   case WM_MOUSEWHEEL:
     {
     BYTE   r = slctcolor->GetR();
-    BYTE   g = slctcolor->GetG();
-    BYTE   b = slctcolor->GetB();
-    BYTE   a = slctcolor->GetA();
     int i = GET_WHEEL_DELTA_WPARAM(wParam);
     if (i > 0) {
-      r = r < 255 ? r + 1 : 255;
-      g = g < 255 ? g + 1 : 255;
-      b = b < 255 ? b + 1 : 255;
+      r = r < 255 ? ++r : 255;
     }
     else {
-      r = r > 0 ? r - 1 : 0;
-      g = g > 0 ? g - 1 : 0;
-      b = b > 0 ? b - 1 : 0;
+      r = r > 0 ? --r : 0;
     }
-      *slctcolor = Color(a, r, g, b);
+      *slctcolor = Color(255, r, r, r);
       RedrawWindow(hWnd, &rc, NULL, RDW_INVALIDATE);
     }
     break;

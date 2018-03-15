@@ -1,9 +1,9 @@
 
-VER=1.0
+VER=1.1
 
 GCC=g++
 RC=windres
-EXE=ddclock-${VER}.exe
+EXE=ddclock.${VER}.exe
 LDFLAGS=-s -O2 -static -mwindows -lgdiplus -lcomctl32 -static-libgcc -static-libstdc++
 CXXFLAGS=-O2 -Wl,-rpath
 OBJS=resource.res main.o
