@@ -1,7 +1,7 @@
 #include "resource.h"
 
-IDI_APPICON ICON "icon.ico"
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "app.manifest"
+IDI_APPICON     ICON    "icon.ico"
+//CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "app.manifest"
 
 IDR_MYFONT              BINARY                  "font\\digital-7mono.ttf"
 

@@ -1,6 +1,5 @@
 .gitconfig
 build
-.vscode
 .git
 upx393w
 *.o
