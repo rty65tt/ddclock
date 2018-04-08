@@ -62,15 +62,15 @@ VOID OnPaint(HDC *hdc, PREFS *p_prefs, FontFamily *fF)
     buffer[6]=         dchar[st.wSecond/10];
     buffer[7]=         dchar[st.wSecond%10];
     
-    float k = 1.05;
+	float k = 1.05f;
 
-    int fsz = p_prefs->rc.right * k/4.1;
+    float fsz = p_prefs->rc.right * k/4.1f;
     if (fsz > p_prefs->rc.bottom * k)
         fsz = p_prefs->rc.bottom * k;
-    int sx = p_prefs->rc.right * k - p_prefs->rc.right;
-    int sy = p_prefs->rc.bottom * k - p_prefs->rc.bottom;
+    int sx = (int)(p_prefs->rc.right * k - p_prefs->rc.right);
+    int sy = (int)(p_prefs->rc.bottom * k - p_prefs->rc.bottom);
 
-    Font dgtFont(fF, fsz, FontStyleRegular, UnitPixel);
+    Gdiplus::Font dgtFont(fF, fsz, FontStyleRegular, UnitPixel);
 
     HDC hDCMem = CreateCompatibleDC(*hdc);
     HBITMAP hBmp = CreateCompatibleBitmap(*hdc, p_prefs->rc.right, p_prefs->rc.bottom);

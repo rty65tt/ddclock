@@ -15,7 +15,7 @@
 #include "ddclock.h"
 
 //#include <stdio.h>
-#include <wchar.h>
+//#include <wchar.h>
 //#include <iostream>
 
 using namespace Gdiplus;
@@ -87,7 +87,7 @@ int WINAPI WinMain (HINSTANCE hThisInstance,
     Gdiplus::PrivateFontCollection m_fontcollection;
 
     HRSRC res = FindResource(hThisInstance,
-        MAKEINTRESOURCE(IDR_MYFONT),"BINARY");
+        MAKEINTRESOURCE(IDR_MYFONT), "BINARY");
     if (res) 
       {
         HGLOBAL mem = LoadResource(hThisInstance, res);

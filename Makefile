@@ -6,10 +6,11 @@ RC			= windres
 EXE			= ddclock.$(VER).exe
 LDFLAGS		= -s -static -mwindows -lgdiplus -static-libstdc++ 
 CXXFLAGS	= -Os -Wall
-OBJS		= $(OBJ)/resource.res $(OBJ)/ddclock.o
 BIN			= release
 SRC			= src
-OBJ			= obj
+OBJ			= $(BIN)/obj
+
+OBJS		= $(OBJ)/resource.res $(OBJ)/ddclock.o
 
 .PHONY:all clean 
 
