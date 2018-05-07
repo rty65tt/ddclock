@@ -72,14 +72,13 @@ VOID OnPaint(HDC *hdc, PREFS *p_prefs, FontFamily *fF)
 
     Gdiplus::Font dgtFont(fF, fsz, FontStyleRegular, UnitPixel);
 
-    HDC hDCMem = CreateCompatibleDC(*hdc);
-    HBITMAP hBmp = CreateCompatibleBitmap(*hdc, p_prefs->rc.right, p_prefs->rc.bottom);
-    HGDIOBJ hTmp = SelectObject(hDCMem, hBmp);
+    Graphics graphics(*hdc);
+	Bitmap backBuffer(p_prefs->rc.right, p_prefs->rc.bottom, &graphics);
+	Graphics g(&backBuffer);
 
-    Graphics graphics(hDCMem);
-    graphics.Clear(p_prefs->colors.bg);
-    graphics.SetSmoothingMode(SmoothingModeHighQuality);
-    graphics.SetTextRenderingHint(TextRenderingHintAntiAlias);
+    g.Clear(p_prefs->colors.bg);
+    g.SetSmoothingMode(SmoothingModeHighQuality);
+    g.SetTextRenderingHint(TextRenderingHintAntiAlias);
 
     SolidBrush fgBrush(p_prefs->colors.fg);
     SolidBrush ldBrush(p_prefs->colors.ld);
@@ -87,24 +86,20 @@ VOID OnPaint(HDC *hdc, PREFS *p_prefs, FontFamily *fF)
     format.SetAlignment(StringAlignmentCenter);
     format.SetLineAlignment(StringAlignmentCenter);
     RectF layoutRect(7.0f-sx, 0.0f, p_prefs->rc.right+sx, p_prefs->rc.bottom+2*sy);
-    graphics.DrawString(ledstr,8,&dgtFont,layoutRect,&format,&ldBrush);
-    graphics.DrawString(buffer,8,&dgtFont,layoutRect,&format,&fgBrush);
+    g.DrawString(ledstr,8,&dgtFont,layoutRect,&format,&ldBrush);
+    g.DrawString(buffer,8,&dgtFont,layoutRect,&format,&fgBrush);
 
     RectF ellipseRect(2.0f, 2.0f, 5.0f, 5.0f);
     SolidBrush *crBrush = (p_prefs->topmost == HWND_TOPMOST) ? &fgBrush : &ldBrush;
-    graphics.FillEllipse(crBrush,ellipseRect);
-/*
-    for (int i=0; i < 3; i++) {
-      RectF ellipseRect(2.0f, 7.0f* i + 10, 5.0f, 5.0f);
-       crBrush = (settclr == i) ? &fgBrush : &ldBrush;
-       graphics.FillEllipse(crBrush,ellipseRect);
-    }*/
+    g.FillEllipse(crBrush,ellipseRect);
+    
+    // for (int i=0; i < 3; i++) {
+    //   RectF ellipseRect(2.0f, 7.0f* i + 10, 5.0f, 5.0f);
+    //    crBrush = (settclr == i) ? &fgBrush : &ldBrush;
+    //    g.FillEllipse(crBrush,ellipseRect);
+    // }
 
-    BitBlt(*hdc, 0, 0, p_prefs->rc.right, p_prefs->rc.bottom, hDCMem, 0, 0, SRCCOPY);
-  
-    SelectObject(*hdc, hTmp);
-    DeleteObject(hBmp);
-    DeleteDC(hDCMem);
+	graphics.DrawImage(&backBuffer, 0, 0, 0, 0, p_prefs->rc.right, p_prefs->rc.bottom, UnitPixel);
     
 }
 
